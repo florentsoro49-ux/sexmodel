@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Connexion</title>
+</head>
+<body>
+
+<h2>Se connecter</h2>
+
+<form id="loginForm">
+<label for="identifier">Email ou nom d'utilisateur :</label><br>
+<input type="text" id="identifier" name="identifier" required><br><br>
+
+<label for="password">Mot de passe :</label><br>
+<input type="password" id="password" name="password" required><br><br>
+
+<button type="submit">Connexion</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault(); // empêche le rechargement
+
+    const identifier = document.getElementById("identifier").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                identifier: identifier,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById("message").textContent = "Connexion réussie ✅";
+        } else {
+            document.getElementById("message").textContent = data.message || "Erreur de connexion ❌";
+        }
+
+    } catch (error) {
+        document.getElementById("message").textContent = "Erreur serveur ❌";
+    }
+});
+</script>
+
+</body>
+</html>
